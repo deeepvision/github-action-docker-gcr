@@ -15,7 +15,6 @@ function main() {
   GCR_REGISTRY=${INPUT_GCRREGION}-docker.pkg.dev
   GCR_IMAGE_NAME=${GCR_REGISTRY}/${INPUT_GCRPROJECT}/${INPUT_GCRREPO}/${INPUT_GCRNAME}:${IMAGE_TAG}
 
-  echo ${INPUT_GCRJSONKEY}
   echo ${INPUT_GCRJSONKEY} | docker login -u _json_key --password-stdin ${GCR_REGISTRY}
   docker tag ${GITHUB_DOCKER_IMAGE_NAME} ${GCR_IMAGE_NAME}
   docker push ${GCR_IMAGE_NAME}
