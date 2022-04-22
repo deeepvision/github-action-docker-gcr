@@ -6,11 +6,13 @@ on:
       - v*
 
 jobs:
-  prebuild:
+  PreBuild:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
+        name: Checkout
       - uses: docker://ghcr.io/deeepvision/github-action-docker-build/docker-build:1.1
+        name: Build Docker Image
         with:
           name: github-action-docker-gcr
           registryType: ghcr
