@@ -3,10 +3,12 @@
 set -e
 
 function main() {
-  GITHUB_DOCKER_REGISTRY=docker.pkg.github.com
+  echo ""
+
+  DOCKER_REGISTRY=ghcr.io
   translateDockerTag
 
-  GITHUB_DOCKER_IMAGE_NAME=${GITHUB_DOCKER_REGISTRY}/${GITHUB_REPOSITORY}/${INPUT_GITHUBNAME}:${IMAGE_TAG}
+  GITHUB_DOCKER_IMAGE_NAME=${DOCKER_REGISTRY}/${GITHUB_REPOSITORY_OWNER}/${INPUT_NAME}:${IMAGE_TAG}
 
   echo ${GITHUB_TOKEN} | docker login -u ${GITHUB_ACTOR} --password-stdin ${GITHUB_DOCKER_REGISTRY}
   docker pull ${GITHUB_DOCKER_IMAGE_NAME}
@@ -25,7 +27,9 @@ function translateDockerTag() {
   if isOnMaster; then
     IMAGE_TAG="latest"
   elif isOnReleaseBranch; then
-    IMAGE_TAG=$(echo ${GITHUB_REF} | sed -e "s/refs\/heads\/release\///g")
+    IMAGE_TAG=$(echo ${GITHUB_REF} | sed -e "s/refs\/heads\/release\///g")-rc
+  elif isOnVersionBranch; then
+    IMAGE_TAG=$(echo ${GITHUB_REF} | sed -e "s/refs\/heads\/v\([[:digit:]]*.[[:digit:]]*\)/\1/g")
   elif isGitTag; then
     IMAGE_TAG=$(echo ${GITHUB_REF} | sed -e "s/refs\/tags\/v\([[:digit:]]*.[[:digit:]]*\).[[:digit:]]*/\1/g")
   else
@@ -39,6 +43,10 @@ function isOnMaster() {
 
 function isOnReleaseBranch() {
   [ $(echo "${GITHUB_REF}" | sed -e "s/refs\/heads\/release\///g") != "${GITHUB_REF}" ]
+}
+
+function isOnVersionBranch() {
+  [ $(echo "${GITHUB_REF}" | sed -e "s/refs\/heads\/v//g") != "${GITHUB_REF}" ]
 }
 
 function isGitTag() {
