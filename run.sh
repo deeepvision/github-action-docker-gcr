@@ -5,7 +5,7 @@ set -e
 function main() {
   echo ""
 
-  DOCKER_REGISTRY=ghcr.io
+  GITHUB_DOCKER_REGISTRY=ghcr.io
   translateDockerTag
 
   GITHUB_DOCKER_IMAGE_NAME=${DOCKER_REGISTRY}/${GITHUB_REPOSITORY_OWNER}/${INPUT_NAME}:${IMAGE_TAG}
