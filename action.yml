@@ -3,7 +3,6 @@ description: 'Push Docker image for Google Container Registry'
 inputs:
   githubName:
     description: 'The name of the image on Github'
-    required: true
   gcrRegion:
     description: 'GCR region'
     required: true

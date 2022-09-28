@@ -11,10 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@master
         name: Checkout
-      - uses: docker://ghcr.io/deeepvision/github-action-docker-build/docker-build:1.1
+      - uses: docker://ghcr.io/deeepvision/github-action-docker-build:1.2
         name: Build Docker Image
-        with:
-          name: github-action-docker-gcr
-          registryType: ghcr
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
