@@ -14,16 +14,26 @@ function main() {
     GITHUB_DOCKER_IMAGE_NAME=${GITHUB_DOCKER_REGISTRY}/${GITHUB_REPOSITORY_OWNER}/${INPUT_GITHUBNAME}:${IMAGE_TAG}
   fi
 
+  echo "🔑 Github Container Registry: Login to ${GITHUB_DOCKER_REGISTRY}"
   echo ${GITHUB_TOKEN} | docker login -u ${GITHUB_ACTOR} --password-stdin ${GITHUB_DOCKER_REGISTRY}
+
+  echo "👷⬇️ Github Container Registry: Pull ${GITHUB_DOCKER_IMAGE_NAME}"
   docker pull ${GITHUB_DOCKER_IMAGE_NAME}
+
+  echo "🔑 Github Container Registry: Logout"
   docker logout ${GITHUB_DOCKER_REGISTRY}
 
   GCR_REGISTRY=${INPUT_GCRREGION}-docker.pkg.dev
   GCR_IMAGE_NAME=${GCR_REGISTRY}/${INPUT_GCRPROJECT}/${INPUT_GCRREPO}/${INPUT_GCRNAME}:${IMAGE_TAG}
 
+  echo "🔑 GCP Artifact Registry: Login to ${GCR_REGISTRY}"
   echo ${INPUT_GCRJSONKEY} | docker login -u _json_key --password-stdin ${GCR_REGISTRY}
   docker tag ${GITHUB_DOCKER_IMAGE_NAME} ${GCR_IMAGE_NAME}
+
+  echo "👷⬆️ GCP Artifact Registry: Push ${GCR_IMAGE_NAME}"
   docker push ${GCR_IMAGE_NAME}
+
+  echo "🔑 GCP Artifact Registry: Logout"
   docker logout
 }
 
